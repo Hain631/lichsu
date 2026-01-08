@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hào Khí Việt Nam - Timeline Chi Tiết</title>
+    <style>
+        :root {
+            --primary-color: #c0392b;
+            --secondary-color: #2c3e50;
+            --bg-color: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            background-image: url("https://wallpapers.com/images/hd/historical-background-69e6wl8du4yi0gpe.jpg");
+            background-repeat: no-repeat; 
+            background-size: cover;     
+            background-attachment: fixed; 
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0; bottom: 0; left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        .container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 45%;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease-out;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .left { left: 0; text-align: right; }
+        .right { left: 46%; text-align: left; }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -13px;
+            background-color: white;
+            border: 4px solid var(--primary-color);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .right::after { left: -13px; }
+
+        .content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .content:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(192, 57, 43, 0.2);
+        }
+
+        .content h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .year {
+            font-weight: bold;
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .details {
+            display: none;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+            padding-top: 10px;
+            color: #333;
+            text-align: left;
+        }
+
+        .details img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .info-row { margin-bottom: 8px; }
+        .info-row strong { color: var(--primary-color); }
+
+        @media screen and (max-width: 700px) {
+            .timeline::after { left: 31px; }
+            .container { width: 100%; padding-left: 70px; padding-right: 25px; text-align: left !important; }
+            .container::after { left: 18px; }
+            .right { left: 0%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>HÀO KHÍ VIỆT NAM</h1>
+    <p>Dòng thời gian các cuộc kháng chiến chống ngoại xâm qua các thời đại</p>
+</header>
+
+<div class="timeline" id="timeline"></div>
+
+<script>
+    const historyData = [
+        { 
+            year: "40 – 43", title: "Khởi nghĩa Hai Bà Trưng", leader: "Trưng Trắc, Trưng Nhị", 
+            cause: "Nhân dân căm thù ách đô hộ tàn bạo của nhà Đông Hán.", 
+            result: "Thất bại.", significance: "Mở đầu truyền thống đấu tranh giành độc lập của dân tộc.",
+            img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Hai_ba_trung_Dong_Ho_painting.jpg"
+        },
+        { 
+            year: "248", title: "Khởi nghĩa Bà Triệu", leader: "Triệu Thị Trinh", 
+            cause: "Chống lại ách đô hộ của nhà Ngô.", 
+            result: "Thất bại.", significance: "Khẳng định ý chí độc lập, tinh thần bất khuất của nhân dân ta.",
+            img: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Ba_trieu_cuoi_voi.jpg"
+        },
+        { 
+            year: "542 – 602", title: "Khởi nghĩa Lý Bí – nước Vạn Xuân", leader: "Lý Bí", 
+            cause: "Nhân dân nổi dậy chống ách đô hộ của nhà Lương.", 
+            result: "Thất bại.", significance: "Đánh dấu bước phát triển mới của phong trào giành độc lập.",
+            img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Emperor_Ly_Nam_De.jpg"
+        },
+        { 
+            year: "938", title: "Kháng chiến chống Nam Hán", leader: "Ngô Quyền", 
+            cause: "Nam Hán xâm lược nhằm tái lập ách đô hộ.", 
+            result: "Thắng lợi (chiến thắng Bạch Đằng).", significance: "Chấm dứt hơn 1000 năm Bắc thuộc, mở ra thời kì độc lập lâu dài.",
+            img: "https://upload.wikimedia.org/wikipedia/commons/2/27/Ng%C3%B4_Quy%E1%BB%81n_%C4%91%E1%BA%A1i_ph%C3%A1_qu%C3%A2n_Nam_H%C3%A1n_tr%C3%AAn_s%C3%B4ng_B%E1%BA%A1ch_%C4%90%E1%BA%B1ng.jpg"
+        },
+        { 
+            year: "981", title: "Kháng chiến chống Tống (lần 1)", leader: "Lê Hoàn", 
+            cause: "Nhà Tống xâm lược Đại Cồ Việt.", 
+            result: "Thắng lợi.", significance: "Củng cố nền độc lập của nhà nước phong kiến Việt Nam.",
+            img: "https://gamego.vn/wp-content/uploads/2025/06/147888222811704-c12.webp"
+        },
+        { 
+            year: "1075 – 1077", title: "Kháng chiến chống Tống (lần 2)", leader: "Lý Thường Kiệt", 
+            cause: "Nhà Tống chuẩn bị xâm lược Đại Việt.", 
+            result: "Thắng lợi.", significance: "Bảo vệ vững chắc chủ quyền quốc gia.",
+            img: "https://nguonluc.com.vn/uploads/images/2023/02/09/ly-thuong-kiet-chien-tranh-tong-viet-01-1675916093.jpg"
+        },
+        { 
+            year: "1258", title: "Chống Mông-Nguyên lần thứ nhất", leader: "Trần Thái Tông, Trần Hưng Đạo", 
+            cause: "Quân Mông Cổ xâm lược Đại Việt để mở đường xuống phương Nam.", 
+            result: "Quân Mông Cổ thất bại, rút lui.", significance: "Bảo vệ độc lập, mở đầu truyền thống chống xâm lược thời Trần.",
+            img: "https://nguonluc.com.vn/uploads/images/2023/02/10/1-1676023708.jpg"
+        },
+        { 
+            year: "1285", title: "Chống Mông-Nguyên lần thứ hai", leader: "Trần Nhân Tông, Trần Hưng Đạo", 
+            cause: "Nhà Nguyên quyết tâm xâm lược Đại Việt.", 
+            result: "Quân Nguyên thất bại nặng nề.", significance: "Củng cố nền độc lập, nâng cao vị thế Đại Việt.",
+            img: "https://nguonluc.com.vn/uploads/images/2023/04/12/screenshot-2-1681285062.png"
+        },
+        { 
+            year: "1287 – 1288", title: "Chống Mông-Nguyên lần thứ ba", leader: "Trần Nhân Tông, Trần Hưng Đạo", 
+            cause: "Nhà Nguyên xâm lược lần nữa nhằm phục thù và khống chế Đại Việt.", 
+            result: "Thắng lợi quyết định ở Bạch Đằng (1288).", significance: "Đập tan hoàn toàn ý đồ xâm lược của đế chế Mông – Nguyên.",
+            img: "https://baotanglichsu.vn/DataFiles/News/Tintuc_cgs_vn_201411316h55m34s.jpg"
+        },
+        { 
+            year: "1406 – 1407", title: "Kháng chiến chống Minh", leader: "Hồ Quý Ly", 
+            cause: "Nhà Minh xâm lược Đại Việt.", 
+            result: "Thất bại.", significance: "Để lại bài học về đoàn kết và đường lối kháng chiến.",
+            img: "https://nguonluc.com.vn/uploads/images/2023/12/31/nhung-diem-sang-tich-cuc-cua-ho-quy-ly-nham-xay-dung-dat-nuoc-cuong-thinh-f61a443fec48424ab1dc39c4152c70ad-1704038901.jpg"
+        },
+        { 
+            year: "1418 – 1427", title: "Khởi nghĩa Lam Sơn", leader: "Lê Lợi", 
+            cause: "Nhân dân đứng lên chống ách đô hộ nhà Minh.", 
+            result: "Thắng lợi.", significance: "Giải phóng đất nước, mở ra thời kì thịnh trị nhà Lê sơ.",
+            img: "https://s.webpie.net/instances/1/c560f045982b56b9b280c82367675f2c/_p/08c01d94f9d75883bb57f21f17448060/lamson2.jpg"
+        },
+        { 
+            year: "1785", title: "Kháng chiến chống Xiêm", leader: "Nguyễn Huệ", 
+            cause: "Quân Xiêm xâm lược nước ta.", 
+            result: "Thắng lợi (Rạch Gầm – Xoài Mút).", significance: "Bảo vệ chủ quyền phía Nam.",
+            img: "https://file3.qdnd.vn/data/images/5/2023/06/28/tranhang/a3.jpg"
+        },
+        { 
+            year: "1789", title: "Kháng chiến chống Thanh", leader: "Nguyễn Huệ", 
+            cause: "Quân Thanh xâm lược nhằm can thiệp vào nội bộ Đại Việt.", 
+            result: "Thắng lợi (Ngọc Hồi – Đống Đa).", significance: "Khẳng định sức mạnh và nền độc lập dân tộc.",
+            img: "https://lh4.googleusercontent.com/proxy/XgrwYkeYxVbYPmE2-jvkpJTmBVhMSgo7P9NC2vieAjm8Fqx7j5u8hVfVvhltvJ4t8CP2iNGwOY586ibfr5yWwDWUupNUwV-jHAnEkfTIiRFdTO1QuaD8LPQWqX2GyOL9fZKf4HGVLVDb6TtDL3A"
+        },
+        { 
+            year: "1858 – 1884", title: "Kháng chiến chống Pháp", leader: "Triều Nguyễn, văn thân – sĩ phu", 
+            cause: "Thực dân Pháp xâm lược Việt Nam.", 
+            result: "Thất bại.", significance: "Thể hiện tinh thần yêu nước, chuẩn bị cho phong trào cứu nước mới.",
+            img: "https://cttdt.danangportal.gov.vn/images/image/6430021.JPG"
+        },
+        { 
+            year: "1885 – 1896", title: "Phong trào Cần Vương", leader: "Tôn Thất Thuyết, vua Hàm Nghi", 
+            cause: "Kêu gọi giúp vua đánh Pháp cứu nước.", 
+            result: "Thất bại.", significance: "Đánh dấu sự khủng hoảng của con đường cứu nước phong kiến.",
+            img: "https://i.ex-cdn.com/vietnamfinance.vn/files/f1/news/hoanghung_btv/2020/1/22/phong-trao-can-vuong.jpg"
+        }
+    ];
+
+    const timeline = document.getElementById('timeline');
+
+    historyData.forEach((item, index) => {
+        const side = index % 2 === 0 ? 'left' : 'right';
+        const container = document.createElement('div');
+        container.className = `container ${side}`;
+        
+        container.innerHTML = `
+            <div class="content" onclick="toggleDetails(this)">
+                <span class="year">${item.year}</span>
+                <h2>${item.title}</h2>
+                <div class="details">
+                    <img src="${item.img}" alt="${item.title}">
+                    <div class="info-row"><strong>Lãnh đạo:</strong> ${item.leader}</div>
+                    <div class="info-row"><strong>Nguyên nhân:</strong> ${item.cause}</div>
+                    <div class="info-row"><strong>Kết quả:</strong> ${item.result}</div>
+                    <div class="info-row"><strong>Ý nghĩa:</strong> ${item.significance}</div>
+                </div>
+                <small style="color: #999; display: block; margin-top: 5px;">(Ấn để xem chi tiết)</small>
+            </div>
+        `;
+        timeline.appendChild(container);
+    });
+
+    function toggleDetails(element) {
+        const details = element.querySelector('.details');
+        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('show');
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.container').forEach(c => observer.observe(c));
+</script>
+
+</body>
+</html>
